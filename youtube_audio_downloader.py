@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 YouTube Audio Downloader
 Baixa áudio de vídeos do YouTube em MP3 ou WAV
@@ -191,14 +192,23 @@ class YouTubeAudioDownloader:
     
     def start_download(self):
         url = self.url_var.get().strip()
-        
+
         if not url:
             messagebox.showerror("Erro", "Por favor, insira uma URL!")
             return
-        
+
         if not url.startswith(("http://", "https://")):
-            messagebox.showerror("Erro", "URL inválida!")
+            messagebox.showerror("Erro", "URL inválida! Use uma URL completa começando com http:// ou https://")
             return
+
+        # Validação básica para URLs do YouTube
+        if not any(domain in url.lower() for domain in ["youtube.com", "youtu.be", "music.youtube.com"]):
+            result = messagebox.askyesno(
+                "Aviso",
+                "A URL não parece ser do YouTube. Deseja continuar mesmo assim?"
+            )
+            if not result:
+                return
         
         # Desabilitar botão durante download
         self.download_btn.config(state=tk.DISABLED)
@@ -250,12 +260,14 @@ class YouTubeAudioDownloader:
                 cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                universal_newlines=True
+                universal_newlines=True,
+                encoding='utf-8',
+                errors='replace'
             )
-            
+
             # Capturar saída
             for line in process.stdout:
-                if "[download]" in line or "[ExtractAudio]" in line:
+                if "[download]" in line or "[ExtractAudio]" in line or "[Metadata]" in line:
                     self.log(line.strip())
             
             process.wait()

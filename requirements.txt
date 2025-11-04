@@ -1,0 +1,10 @@
+# YouTube Audio Downloader - Dependências Python
+
+# Ferramenta principal para download de áudio do YouTube
+yt-dlp>=2023.3.4
+
+# Nota: FFmpeg não é uma dependência Python, mas é necessário
+# Instale FFmpeg separadamente:
+# - Windows: https://ffmpeg.org/download.html
+# - Linux: sudo apt install ffmpeg (Ubuntu/Debian)
+# - macOS: brew install ffmpeg

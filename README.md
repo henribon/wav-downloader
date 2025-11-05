@@ -4,7 +4,11 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
 
-Aplicativo desktop com interface gráfica para baixar áudio de vídeos do YouTube em formato MP3 ou WAV com qualidade máxima.
+Aplicação web e desktop para baixar áudio de vídeos do YouTube em formato MP3 ou WAV com qualidade máxima.
+
+## 🌐 Versão Web (Recomendada)
+
+Interface web minimalista e moderna para baixar áudios diretamente pelo navegador!
 
 ## ⚠️ Aviso Legal
 
@@ -50,28 +54,48 @@ Este software é fornecido apenas para fins educacionais e para uso com conteúd
 ╚════════════════════════════════════════╝
 ```
 
-## 📥 Instalação
+## 📥 Instalação e Uso
 
-### 1. Clone o Repositório
+### 🌐 Versão Web (Simples e Rápida)
 
+1. **Clone o Repositório**
 ```bash
 git clone https://github.com/seu-usuario/wav-downloader.git
 cd wav-downloader
 ```
 
-### 2. Instale as Dependências Python
-
+2. **Instale as Dependências**
 ```bash
 pip install -r requirements.txt
 ```
 
-Ou instale manualmente:
+3. **Instale o FFmpeg** (veja instruções abaixo)
 
+4. **Inicie o Servidor**
 ```bash
-pip install yt-dlp
+python app.py
 ```
 
-### 3. Instale o FFmpeg
+5. **Abra no Navegador**
+```
+http://localhost:5000
+```
+
+Pronto! Agora é só colar a URL do YouTube e clicar em Download! 🎉
+
+---
+
+### 💻 Versão Desktop (Interface Gráfica Tkinter)
+
+Se preferir usar a versão desktop com interface gráfica:
+
+```bash
+python youtube_audio_downloader.py
+```
+
+---
+
+### 🔧 Instalação do FFmpeg
 
 O FFmpeg é necessário para converter os arquivos de áudio.
 
@@ -106,38 +130,30 @@ sudo pacman -S ffmpeg
 brew install ffmpeg
 ```
 
-### 4. Execute o Programa
+## 🚀 Como Usar a Versão Web
 
-```bash
-python youtube_audio_downloader.py
-```
+1. **Inicie o servidor** com `python app.py`
+2. **Abra o navegador** em `http://localhost:5000`
+3. **Cole a URL do vídeo do YouTube** no campo de texto
+4. **Escolha o formato**:
+   - **MP3**: Formato comprimido, arquivos menores
+   - **WAV**: Formato sem compressão, máxima qualidade
+5. **Clique em "Download"** e aguarde
+6. O arquivo será baixado automaticamente para seu computador!
 
-Ou torne o arquivo executável (Linux/macOS):
+### Como Usar a Versão Desktop
 
-```bash
-chmod +x youtube_audio_downloader.py
-./youtube_audio_downloader.py
-```
-
-## 🚀 Como Usar
-
-1. **Cole a URL do vídeo do YouTube** no campo "URL do vídeo"
-2. **Escolha o formato de áudio**:
-   - **MP3**: Formato comprimido, arquivos menores, ideal para a maioria dos usos
-   - **WAV**: Formato sem compressão, máxima qualidade, arquivos grandes, ideal para edição profissional
-3. **Selecione a qualidade** (apenas para MP3):
-   - **best**: Melhor qualidade disponível
-   - **320k**: Alta qualidade (320 kbps)
-   - **256k**: Boa qualidade (256 kbps)
-   - **192k**: Qualidade média (192 kbps)
-   - **128k**: Qualidade básica (128 kbps)
-4. **Escolha a pasta de destino** (padrão: ~/Downloads)
-5. **Clique em "Baixar Áudio"** e aguarde a conclusão
+1. Execute `python youtube_audio_downloader.py`
+2. Cole a URL do vídeo
+3. Escolha o formato e qualidade
+4. Selecione a pasta de destino
+5. Clique em "Baixar Áudio"
 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Python 3.7+**: Linguagem de programação
-- **Tkinter**: Interface gráfica (incluído no Python)
+- **Flask**: Framework web para a interface online
+- **Tkinter**: Interface gráfica desktop (incluído no Python)
 - **yt-dlp**: Biblioteca para download de vídeos/áudio do YouTube
 - **FFmpeg**: Conversão e processamento de áudio
 

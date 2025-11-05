@@ -50,24 +50,35 @@ def index():
 def download():
     """Endpoint para download de áudio"""
     try:
+        print("=" * 50)
+        print("Nova requisição de download recebida")
+
         data = request.get_json()
+        print(f"Dados recebidos: {data}")
+
         url = data.get('url', '').strip()
         audio_format = data.get('format', 'mp3')
 
+        print(f"URL: {url}")
+        print(f"Formato: {audio_format}")
+
         # Validação
         if not url:
+            print("Erro: URL não fornecida")
             return jsonify({'error': 'URL não fornecida'}), 400
 
         if not url.startswith(('http://', 'https://')):
+            print("Erro: URL inválida")
             return jsonify({'error': 'URL inválida'}), 400
 
         # Gerar nome único para o arquivo
         file_id = str(uuid.uuid4())
+        print(f"ID do arquivo: {file_id}")
 
         # Configurar template de saída
         output_template = os.path.join(DOWNLOAD_FOLDER, f"{file_id}.%(ext)s")
 
-        print(f"Baixando: {url} em formato {audio_format}")
+        print(f"Iniciando download: {url} em formato {audio_format}")
 
         # Comando yt-dlp
         if audio_format == 'mp3':
@@ -91,6 +102,7 @@ def download():
             ]
 
         # Executar download
+        print(f"Executando comando: {' '.join(cmd)}")
         process = subprocess.run(
             cmd,
             capture_output=True,
@@ -98,25 +110,38 @@ def download():
             timeout=300  # 5 minutos timeout
         )
 
+        print(f"Código de retorno: {process.returncode}")
+
         if process.returncode != 0:
             error_msg = process.stderr if process.stderr else 'Erro desconhecido'
             print(f"Erro no download: {error_msg}")
+            print(f"STDOUT: {process.stdout}")
             return jsonify({'error': 'Falha no download. Verifique a URL.'}), 500
 
+        print("Download concluído com sucesso!")
+
         # Encontrar o arquivo baixado
+        print(f"Procurando arquivo em: {DOWNLOAD_FOLDER}")
+        print(f"Arquivos na pasta: {os.listdir(DOWNLOAD_FOLDER)}")
+
         downloaded_file = None
         for filename in os.listdir(DOWNLOAD_FOLDER):
             if filename.startswith(file_id):
                 downloaded_file = filename
+                print(f"Arquivo encontrado: {downloaded_file}")
                 break
 
         if not downloaded_file:
+            print("ERRO: Arquivo não encontrado após download")
             return jsonify({'error': 'Arquivo não encontrado após download'}), 500
 
         filepath = os.path.join(DOWNLOAD_FOLDER, downloaded_file)
+        print(f"Caminho completo: {filepath}")
 
         # Retornar URL para download
         download_url = f'/get/{downloaded_file}'
+        print(f"URL de download: {download_url}")
+        print("=" * 50)
 
         return jsonify({
             'success': True,

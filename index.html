@@ -237,11 +237,15 @@
         });
 
         async function downloadAudio() {
+            console.log('downloadAudio called');
             const url = document.getElementById('urlInput').value.trim();
             const format = document.querySelector('input[name="format"]:checked').value;
             const statusDiv = document.getElementById('status');
             const loader = document.getElementById('loader');
             const downloadBtn = document.getElementById('downloadBtn');
+
+            console.log('URL:', url);
+            console.log('Format:', format);
 
             // Validação
             if (!url) {
@@ -259,7 +263,10 @@
             loader.classList.add('active');
             statusDiv.style.display = 'none';
 
+            showStatus('⏳ Conectando ao servidor...', 'info');
+
             try {
+                console.log('Sending request to /download');
                 const response = await fetch('/download', {
                     method: 'POST',
                     headers: {
@@ -271,21 +278,27 @@
                     })
                 });
 
+                console.log('Response status:', response.status);
+
                 const data = await response.json();
+                console.log('Response data:', data);
 
                 if (response.ok) {
                     // Download bem-sucedido
-                    showStatus('✅ Download iniciado! O arquivo será baixado automaticamente.', 'success');
+                    showStatus('✅ Download pronto! Baixando arquivo...', 'success');
 
                     // Trigger download
                     if (data.download_url) {
+                        console.log('Opening download URL:', data.download_url);
                         window.location.href = data.download_url;
+                    } else {
+                        showStatus('❌ Erro: URL de download não encontrada', 'error');
                     }
                 } else {
                     showStatus('❌ Erro: ' + (data.error || 'Falha no download'), 'error');
                 }
             } catch (error) {
-                showStatus('❌ Erro de conexão. Verifique se o servidor está rodando.', 'error');
+                showStatus('❌ Erro de conexão. Verifique se o servidor está rodando com: python app.py', 'error');
                 console.error('Error:', error);
             } finally {
                 loader.classList.remove('active');

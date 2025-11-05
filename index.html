@@ -233,33 +233,47 @@
             option.addEventListener('click', function() {
                 document.querySelectorAll('.format-option').forEach(o => o.classList.remove('active'));
                 this.classList.add('active');
+                // Garantir que o radio button seja marcado
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    console.log('Formato selecionado:', radio.value);
+                }
             });
         });
 
         async function downloadAudio() {
+            console.log('downloadAudio() chamada');
             const url = document.getElementById('urlInput').value.trim();
             const format = document.querySelector('input[name="format"]:checked').value;
             const statusDiv = document.getElementById('status');
             const loader = document.getElementById('loader');
             const downloadBtn = document.getElementById('downloadBtn');
 
+            console.log('URL:', url);
+            console.log('Formato:', format);
+
             // Validação
             if (!url) {
+                console.log('URL vazia');
                 showStatus('Por favor, insira uma URL!', 'error');
                 return;
             }
 
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                console.log('URL inválida - não começa com http(s)');
                 showStatus('URL inválida! Use uma URL completa.', 'error');
                 return;
             }
 
             // Mostrar loading
+            console.log('Iniciando download...');
             downloadBtn.disabled = true;
             loader.classList.add('active');
             statusDiv.style.display = 'none';
 
             try {
+                console.log('Fazendo requisição para /download');
                 const response = await fetch('/download', {
                     method: 'POST',
                     headers: {
@@ -271,22 +285,27 @@
                     })
                 });
 
+                console.log('Resposta recebida, status:', response.status);
                 const data = await response.json();
+                console.log('Dados:', data);
 
                 if (response.ok) {
                     // Download bem-sucedido
+                    console.log('Download bem-sucedido!');
                     showStatus('✅ Download iniciado! O arquivo será baixado automaticamente.', 'success');
 
                     // Trigger download
                     if (data.download_url) {
+                        console.log('Iniciando download do arquivo:', data.download_url);
                         window.location.href = data.download_url;
                     }
                 } else {
+                    console.log('Erro na resposta:', data.error);
                     showStatus('❌ Erro: ' + (data.error || 'Falha no download'), 'error');
                 }
             } catch (error) {
-                showStatus('❌ Erro de conexão. Verifique se o servidor está rodando.', 'error');
-                console.error('Error:', error);
+                console.error('Erro de conexão:', error);
+                showStatus('❌ Erro de conexão. Verifique se o servidor está rodando em http://127.0.0.1:5000', 'error');
             } finally {
                 loader.classList.remove('active');
                 downloadBtn.disabled = false;

@@ -1,5 +1,8 @@
 # YouTube Audio Downloader - Dependências Python
 
+# Servidor web
+Flask>=2.3.0
+
 # Ferramenta principal para download de áudio do YouTube
 yt-dlp>=2023.3.4
 
